@@ -30,7 +30,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 
     if(empty($_POST["name"])){
-        $name_error = "Prasau iveskite varda";
+        $name_error = "Įveskite varda";
        
     }elseif(strlen($_POST["name"]) < 3){
         $name_error = "Vardas negali buti trumpesnis nei 3 simboliai";
@@ -40,27 +40,31 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $name_flag = true;
         
 
+    }else{
+        $name_error = "Nekorektiškas vardo formatas";
     }
 
     if(empty($_POST["surname"])){
-        $surname_error = "Prasau iveskite pavarde";
+        $surname_error = "Įveskite pavarde";
         
     }elseif(strlen($_POST["surname"]) < 3){
-        $surname_error = "Pavardė negali buti trumpesnis nei 3 simboliai";
+        $surname_error = "Pavardė negali būti trumpesne nei 3 simboliai";
         
     }elseif(preg_match("/\w/i", $_POST["surname"])){
         $surname = test_input($_POST["surname"]);
         $surname_flag = true;
         
 
+    }else{
+        $surname_error = "Nekorektiškas pavardės formatas";
     }
 
     // PERSONAL ID VALIDATION 
     if(empty($_POST["personal_id"])){
-        $personal_id_error = "Prasau iveskite asmens koda";
+        $personal_id_error = "Prašome įvesti asmens koda";
         
     }elseif(!preg_match($personal_id_pattern,$_POST["personal_id"])){
-        $personal_id_error = "Neateisingas Asmens kodas";
+        $personal_id_error = "Neateisingas asmens kodas";
     }else{
         $personal_id = $_POST["personal_id"];
         $personal_id_flag = true;
@@ -110,8 +114,50 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     </div>
   </div>
 </nav>
+<span id="error-msg"></span>
+    
+
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" name="form" method="POST" style="width:50%; margin: 0 auto;">
+    <h1 style="text-align: center;
+    margin: 5%;">Sukūrti sąskaita</h1>
+    <div class="row mb-5">
+        <label class="col-sm-2 col-form-label">Vardas</label>
+<div class="col-sm-10">
+        <input type="text" name="name" class="form-control">
+        </div>
+        <span class="p-3 text-danger-emphasis"><?php  if(isset($name_error)) echo $name_error;?></span>
+    </div>
+    <div class="row mb-5">
+        <label class="col-sm-2 col-form-label">Pavardė</label>
+<div class="col-sm-10">
+        <input type="text" name="surname" class="form-control">
+        </div>
+        <span class="p-3 text-danger-emphasis"><?php if(isset($surname_error)) echo $surname_error;?></span>
+    </div>
+    <div class="row mb-5">
+        <label class="col-sm-2 col-form-label">IBAN</label>
+<div class="col-sm-10">
+        <input type="text" name="iban" value='<?php echo $iban ?>' readonly class="form-control-plaintext">
+        </div>
+    </div>
+    <div class="row mb-5">
+        <label class="col-sm-2 col-form-label">Asmens kodas</label>
+        <div class="col-sm-10">
+        <input type="text" name="personal_id" class="form-control">
+        </div>
+        <span class="p-3 text-danger-emphasis"><?php if(isset($personal_id_error)) echo $personal_id_error;?></span>
+</div>
+        <input type="hidden" name="money" value="0">
+    
+        <button type="submit" name="submit" class="btn btn-primary btn-lg btn-block" style="width: 100%;">Sukūrti</button>
+    </form>
+    </div>
+</div>
+
 
 <?php 
+
+
 
 // POST DATA TO JSON
 if($personal_id_flag === true && $name_flag === true && $surname_flag === true){
@@ -121,29 +167,32 @@ if($personal_id_flag === true && $name_flag === true && $surname_flag === true){
         $flag_personal_id_exist = false;
 
         $users = json_decode(file_get_contents(__DIR__.'/data.json'));
-        // foreach($users as $use){
-        //     if($use -> personal_id == $personal_id){
-                
-        //         $flag_personal_id_exist = true;
-                
         
-        //         break;
-        //     }
-        
-        // }
+
+    
+
 
         if(filesize(__DIR__.'/data.json') == 0){
             $first_record = array($user);
     
             $data_to_save = $first_record;
-        }elseif($flag_personal_id_exist == true){
-            echo "Toks vartotojas jau egzsistuoja";
         }else{
             
 
 
 
+            foreach($users as $use){
+                if($use -> personal_id == $personal_id){
+                    
+                    echo "<p style='margin-top:5%;' class='p-3 text-danger-emphasis bg-danger-subtle border border-danger-subtle rounded-3'>Toks vartotojas jau egzistuoja</p>";
+                    
             
+                    die();
+                }
+            
+            }
+
+
             
             array_push($users,$user);
     
@@ -168,44 +217,7 @@ if($personal_id_flag === true && $name_flag === true && $surname_flag === true){
 
 ?>
 
-    
 
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" name="form" method="POST" style="width:50%; margin: 0 auto;">
-    <h1 style="text-align: center;
-    margin: 5%;">Sukūrti sąskaita</h1>
-    <div class="row mb-5">
-        <label class="col-sm-2 col-form-label">Vardas</label>
-<div class="col-sm-10">
-        <input type="text" name="name" class="form-control">
-        </div>
-        <span class="error"><?php  if(isset($name_error)) echo $name_error;?></span>
-    </div>
-    <div class="row mb-5">
-        <label class="col-sm-2 col-form-label">Pavardė</label>
-<div class="col-sm-10">
-        <input type="text" name="surname" class="form-control">
-        </div>
-        <span class="error"><?php if(isset($surname_error)) echo $surname_error;?></span>
-    </div>
-    <div class="row mb-5">
-        <label class="col-sm-2 col-form-label">IBAN</label>
-<div class="col-sm-10">
-        <input type="text" name="iban" value='<?php echo $iban ?>' readonly class="form-control-plaintext">
-        </div>
-    </div>
-    <div class="row mb-5">
-        <label class="col-sm-2 col-form-label">Asmens kodas</label>
-        <div class="col-sm-10">
-        <input type="text" name="personal_id" class="form-control">
-        </div>
-        <span class="error"><?php if(isset($personal_id_error)) echo $personal_id_error;?></span>
-</div>
-        <input type="hidden" name="money" value="0">
-    
-        <button type="submit" name="submit" class="btn btn-primary btn-lg btn-block" style="width: 100%;">Sukūrti</button>
-    </form>
-    </div>
-</div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
 </body>
 </html>

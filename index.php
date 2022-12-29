@@ -1,5 +1,5 @@
 <?php
-
+ header("Location: http://localhost/Bank/PAGES/sukurti_saskaita.php#");
 ?>
 
 <!DOCTYPE html>
@@ -30,6 +30,7 @@
     </div>
   </div>
 </nav>
+
 
     <ul>
         <li>

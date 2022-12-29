@@ -27,6 +27,7 @@ usort($data, function ($a, $b) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Saskaitu sarasas</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link href="./style.css" rel="stylesheet">
 </head>
 <body>
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -54,9 +55,9 @@ if(isset($_GET['delete']) && $_GET['delete'] == 'true'){
 }elseif(isset($_GET['delete']) && $_GET['delete'] == 'false'){
     echo "<div class='p-3 text-danger-emphasis bg-danger-subtle border border-danger-subtle rounded-3danger'> Negalima istrinti saskaitos jeigu joje yra lesu</div>";
 } ?>
-    <h1 style="text-align: center; margin:3%;">Sąskaitų sąrasas</h1>
+    <h1 style="text-align: center; margin-top:3%;margin-bottom:3%;">Sąskaitų sąrašas</h1>
 
-
+    <div class="table-responsive-sm">
 <table class="table" style="margin:0 auto;">
   <thead>
     <tr>
@@ -73,12 +74,13 @@ if(isset($_GET['delete']) && $_GET['delete'] == 'true'){
     <?php
 
     foreach($data as $val){
-        echo '<tr><th scope="row">'.$val['id'].'</th><td>'.$val['name'].'</td><td>'.$val['surname'].'</td><td>'.$val['iban'].'</td><td>'.$val['personal_id'].'</td><td>'.$val['money'].' &euro;</td><td> <a href="./delete.php?id='.$val['id'].'" class="btn btn-danger">Istrinti</a> <a href="./add_money_page.php?id='.$val['id'].'" class="btn btn-success">Lėšų operacijos</a><td></tr>';
+        echo '<tr><th scope="row">'.$val['id'].'</th><td>'.$val['name'].'</td><td>'.$val['surname'].'</td><td>'.$val['iban'].'</td><td>'.$val['personal_id'].'</td><td>'.$val['money'].' &euro;</td><td class="flx-tbl"> <a href="./delete.php?id='.$val['id'].'" class="btn btn-danger">Istrinti</a> <a href="./add_money_page.php?id='.$val['id'].'" class="btn btn-success">Lėšų operacijos</a><td></tr>';
     }
     ?>
 
 </tbody>
 </table>
+    </div>
 
 
 
