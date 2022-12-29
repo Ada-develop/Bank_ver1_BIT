@@ -1,17 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Prideti Lesu</h1>
-    <form>
-    <input type="text" name="add_money" value="100">
-    <button type="submit">Prideti</button>
-    <form>
+<?php 
 
-</body>
-</html>
+$data_from_file = file_get_contents(__DIR__.'/data.json');
+$data = json_decode($data_from_file);
+    
+$id = (int) $_GET['id'];
+
+foreach($data as $user){
+    if($user -> id == $id){
+        $user -> money += (int)$_POST['money'];
+        file_put_contents(__DIR__.'/data.json', json_encode($data));
+
+        break;
+    }
+
+}
+
+header("Location: http://localhost/Bank/PAGES/add_money_page.php?id=".$id);
+
+    
